@@ -80,12 +80,10 @@ architecture Behavioral of axi_adxl345_functional is
     constant  BW_RATE_ADDR                  :           std_Logic_Vector (  5 downto 0 ) := "10" & x"C"; --6'h2C; -- 
     constant  INT_ENABLE_ADDR               :           std_Logic_Vector (  5 downto 0 ) := "10" & x"E"; --6'h2E; -- 
     constant  INT_SOURCE_ADDR               :           std_Logic_Vector (  5 downto 0 ) := "11" & x"0"; --6'h30; -- 
-    constant  DATA_FORMAT_ADDR              :           std_Logic_Vector (  5 downto 0 ) := "11" & x"1"; --6'h31; -- 
     constant  DATAX0_ADDR                   :           std_Logic_Vector (  5 downto 0 ) := "11" & x"2"; --6'h32; -- 
     constant  DATAX1_ADDR                   :           std_Logic_Vector (  5 downto 0 ) := "11" & x"3"; --6'h33; -- 
     constant  DATAY1_ADDR                   :           std_Logic_Vector (  5 downto 0 ) := "11" & x"5"; --6'h35; -- 
     constant  DATAZ1_ADDR                   :           std_Logic_Vector (  5 downto 0 ) := "11" & x"7"; --6'h37; -- 
-    constant  FIFO_STATUS_ADDR              :           std_Logic_Vector (  5 downto 0 ) := "11" & x"9"; --6'h39; -- 
 
     constant  DEVICE_ID                     : std_logic_Vector (  7 downto 0 ) := x"E5";
 
@@ -103,8 +101,6 @@ architecture Behavioral of axi_adxl345_functional is
         UPD_CHK_FLAQ_ST         ,
         UPD_TX_DATA_ST          , 
         UPD_INCREMENT_ADDR_ST   ,
-
-        FIFO_TX_ADDR_PTR_ST     ,
         STUB_ST                   
 
     );
@@ -192,18 +188,13 @@ architecture Behavioral of axi_adxl345_functional is
     signal  bw_rate_reg                             :       std_Logic_vector (  7 downto 0 )    := (others => '0')              ;
     signal  int_enable_reg                          :       std_Logic_vector (  7 downto 0 )    := (others => '0')              ;
     signal  int_source_reg                          :       std_Logic_vector (  7 downto 0 )    := (others => '0')              ;
-    signal  data_format_reg                         :       std_Logic_vector (  7 downto 0 )    := (others => '0')              ;
-    signal  fifo_status_reg                         :       std_Logic_vector (  7 downto 0 )    := (others => '0')              ;
 
     -- saved fields from registers (as latches, not regs)
-    signal   fifo_status_reg_entries                :       std_logic_Vector (  5 downto 0 )                                    ; -- 0x39 [5:0]
     -- enabled_interrupts flaqs
     signal  has_watermark_intr                      :       std_logic                           := '0'                          ;
 
 
     -- fields of registers
-    signal  data_format_full_res_field              :       std_logic                           := '0'                          ;
-    signal  data_format_range_field                 :       std_Logic_Vector (  1 downto 0 )    := (others => '0')              ;
 
     signal  timer                                   :       std_logic_vector ( 31 downto 0 )    := (others => '0')              ;
     signal  read_valid_counter                      :       std_logic_vector ( 31 downto 0 )    := (others => '0')              ;
@@ -750,25 +741,6 @@ begin
     end process;
 
 
-    data_format_reg_processing : process(CLK)
-    begin 
-        if CLK'event AND CLK = '1' then  
-            if (read_memory_addra = DATA_FORMAT_ADDR) then 
-                if (read_memory_wea = '1') then 
-                    data_format_reg <= read_memory_dina;
-                else
-                    data_format_reg <= data_format_reg;
-                end if;
-            else
-                data_format_reg <= data_format_reg;
-            end if;
-        end if;
-    end process;
-
-
-    data_format_full_res_field  <= data_format_reg ( 3 )                ;
-    data_format_range_field     <= data_format_reg ( 1 downto 0 );
-
 
 
     int_source_reg_processing : process(CLK)
@@ -786,31 +758,6 @@ begin
         end if;
     end process;
 
-
-
-    fifo_status_reg_processing : process(CLK)
-    begin 
-        if CLK'event AND CLK = '1' then 
-            if (read_memory_addra = FIFO_STATUS_ADDR) then 
-                if (read_memory_wea = '1') then 
-                    fifo_status_reg <= read_memory_dina;
-                else
-                    fifo_status_reg <= fifo_status_reg;
-                end if; 
-            else
-                fifo_status_reg <= fifo_status_reg;
-            end if; 
-        end if;
-    end process;
-
-
-
-    fifo_status_reg_entries_processing : process(CLK)
-    begin 
-        if CLK'event AND CLK = '1' then 
-            fifo_status_reg_entries <= fifo_status_reg(5 downto 0);
-        end if;
-    end process;
 
 
 
@@ -947,9 +894,6 @@ begin
                 when UPD_TX_DATA_ST =>
                     out_din_user(0) <= '0';
 
-                when FIFO_TX_ADDR_PTR_ST =>
-                    out_din_user(0) <= '0'; -- is writing data to dev
-
                 when others =>  
                     out_din_user(0) <= out_din_user(0);
 
@@ -994,13 +938,6 @@ begin
                         when others =>  out_din_data <= out_din_data;
                     end case; -- word_counter
 
-                when FIFO_TX_ADDR_PTR_ST =>
-                    case (word_counter) is 
-                        when x"0"   =>  out_din_data <= x"01"; -- how many bytes write
-                        when x"1"   =>  out_din_data <= address_ptr; -- address pointer
-                        when others =>  out_din_data <= out_din_data;
-                    end case; -- word_counter
-
                 when others =>  
                     out_din_data <= out_din_data;
 
@@ -1029,12 +966,6 @@ begin
                         when others => out_din_last <= out_din_last;
                     end case; -- word_counter
 
-                when FIFO_TX_ADDR_PTR_ST =>
-                    case (word_counter) is 
-                        when x"0"   => out_din_last <= '0';
-                        when x"1"   => out_din_last <= '1';
-                        when others => out_din_last <= out_din_last;
-                    end case; -- word_counter
 
                 when others =>  
                     out_din_last <= out_din_last;
@@ -1064,13 +995,6 @@ begin
                     end if; 
 
                 when UPD_TX_DATA_ST =>  
-                    if (out_awfull = '0') then   
-                        out_wren <= '1';
-                    else
-                        out_wren <= '0';
-                    end if;
-
-                when FIFO_TX_ADDR_PTR_ST =>
                     if (out_awfull = '0') then   
                         out_wren <= '1';
                     else
@@ -1161,17 +1085,6 @@ begin
                             current_state <= UPD_CHK_FLAQ_ST;
                         end if;
 
-                    when FIFO_TX_ADDR_PTR_ST =>
-                        if (out_awfull = '0') then   
-                            if (word_counter = x"1") then 
-                                current_state <= STUB_ST;
-                            else
-                                current_state <= current_state;
-                            end if; 
-                        else
-                            current_state <= current_state;
-                        end if;
-
                     when others =>  
                         current_state <= current_state;
 
@@ -1229,12 +1142,6 @@ begin
                         word_counter <= word_counter;
                     end if;
 
-                when FIFO_TX_ADDR_PTR_ST =>  
-                    if (out_awfull = '0') then   
-                        word_counter <= word_counter + 1;
-                    else
-                        word_counter <= word_counter;
-                    end if;
 
                 when others =>  
                     word_counter <= (others => '0');
