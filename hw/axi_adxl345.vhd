@@ -1027,14 +1027,14 @@ begin
             -- data to device
             M_AXIS_TDATA                        =>  M_AXIS_TDATA                                            ,
             M_AXIS_TKEEP                        =>  M_AXIS_TKEEP                                            ,
-            M_AXIS_TUSER                        =>  M_AXIS_TDEST                                            ,
+            M_AXIS_TDEST                        =>  M_AXIS_TDEST                                            ,
             M_AXIS_TVALID                       =>  M_AXIS_TVALID                                           ,
             M_AXIS_TLAST                        =>  M_AXIS_TLAST                                            ,
             M_AXIS_TREADY                       =>  M_AXIS_TREADY                                           ,
             -- data from device
             S_AXIS_TDATA                        =>  S_AXIS_TDATA                                            ,
             S_AXIS_TKEEP                        =>  S_AXIS_TKEEP                                            ,
-            S_AXIS_TUSER                        =>  S_AXIS_TDEST                                            ,
+            S_AXIS_TDEST                        =>  S_AXIS_TDEST                                            ,
             S_AXIS_TVALID                       =>  S_AXIS_TVALID                                           ,
             S_AXIS_TLAST                        =>  S_AXIS_TLAST                                            ,
             S_AXIS_TREADY                       =>  S_AXIS_TREADY                                            
