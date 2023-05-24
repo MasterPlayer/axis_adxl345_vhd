@@ -88,14 +88,14 @@ entity axi_adxl345 is
         
         M_AXIS_TDATA                    :   out     std_logic_vector (                              7 downto 0 )                            ;
         M_AXIS_TKEEP                    :   out     std_logic_vector (                              0 downto 0 )                            ;
-        M_AXIS_TUSER                    :   out     std_logic_vector (                              7 downto 0 )                            ;
+        M_AXIS_TDEST                    :   out     std_logic_vector (                              7 downto 0 )                            ;
         M_AXIS_TVALID                   :   out     std_logic                                                                               ;
         M_AXIS_TLAST                    :   out     std_logic                                                                               ;
         M_AXIS_TREADY                   :   in      std_logic                                                                               ;
         
         S_AXIS_TDATA                    :   in      std_logic_vector (                              7 downto 0 )                            ;
         S_AXIS_TKEEP                    :   in      std_logic_vector (                              0 downto 0 )                            ;
-        S_AXIS_TUSER                    :   in      std_logic_vector (                              7 downto 0 )                            ;
+        S_AXIS_TDEST                    :   in      std_logic_vector (                              7 downto 0 )                            ;
         S_AXIS_TVALID                   :   in      std_logic                                                                               ;
         S_AXIS_TLAST                    :   in      std_logic                                                                               ;
         S_AXIS_TREADY                   :   out     std_logic                                                                               ;
@@ -1027,14 +1027,14 @@ begin
             -- data to device
             M_AXIS_TDATA                        =>  M_AXIS_TDATA                                            ,
             M_AXIS_TKEEP                        =>  M_AXIS_TKEEP                                            ,
-            M_AXIS_TUSER                        =>  M_AXIS_TUSER                                            ,
+            M_AXIS_TUSER                        =>  M_AXIS_TDEST                                            ,
             M_AXIS_TVALID                       =>  M_AXIS_TVALID                                           ,
             M_AXIS_TLAST                        =>  M_AXIS_TLAST                                            ,
             M_AXIS_TREADY                       =>  M_AXIS_TREADY                                           ,
             -- data from device
             S_AXIS_TDATA                        =>  S_AXIS_TDATA                                            ,
             S_AXIS_TKEEP                        =>  S_AXIS_TKEEP                                            ,
-            S_AXIS_TUSER                        =>  S_AXIS_TUSER                                            ,
+            S_AXIS_TUSER                        =>  S_AXIS_TDEST                                            ,
             S_AXIS_TVALID                       =>  S_AXIS_TVALID                                           ,
             S_AXIS_TLAST                        =>  S_AXIS_TLAST                                            ,
             S_AXIS_TREADY                       =>  S_AXIS_TREADY                                            
