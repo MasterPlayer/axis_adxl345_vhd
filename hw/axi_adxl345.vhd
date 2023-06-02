@@ -240,14 +240,14 @@ architecture axi_adxl345_arch of axi_adxl345 is
             -- data to device
             M_AXIS_TDATA                        :   out     std_logic_vector (  7 downto 0 )                                    ;
             M_AXIS_TKEEP                        :   out     std_logic_vector (  0 downto 0 )                                    ;
-            M_AXIS_TUSER                        :   out     std_logic_vector (  7 downto 0 )                                    ;
+            M_AXIS_TDEST                        :   out     std_logic_vector (  7 downto 0 )                                    ;
             M_AXIS_TVALID                       :   out     std_logic                                                           ;
             M_AXIS_TLAST                        :   out     std_logic                                                           ;
             M_AXIS_TREADY                       :   in      std_logic                                                           ;
             -- data from device
             S_AXIS_TDATA                        :   in      std_logic_vector (  7 downto 0 )                                    ;
             S_AXIS_TKEEP                        :   in      std_logic_vector (  0 downto 0 )                                    ;
-            S_AXIS_TUSER                        :   in      std_logic_vector (  7 downto 0 )                                    ;
+            S_AXIS_TDEST                        :   in      std_logic_vector (  7 downto 0 )                                    ;
             S_AXIS_TVALID                       :   in      std_logic                                                           ;
             S_AXIS_TLAST                        :   in      std_logic                                                           ;
             S_AXIS_TREADY                       :   out     std_logic                                                            

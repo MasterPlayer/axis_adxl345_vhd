@@ -753,7 +753,7 @@ begin
         generic map (
             DATA_WIDTH      =>  64                              ,
             MEMTYPE         =>  "block"                         ,
-            DEPTH           =>  16                           
+            DEPTH           =>  64                           
         )
         port map (
             CLK             =>  CLK                             ,

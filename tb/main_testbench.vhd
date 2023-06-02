@@ -80,14 +80,14 @@ architecture Behavioral of main_testbench is
             
             M_AXIS_TDATA                    :   out     std_logic_vector (                              7 downto 0 )                            ;
             M_AXIS_TKEEP                    :   out     std_logic_vector (                              0 downto 0 )                            ;
-            M_AXIS_TUSER                    :   out     std_logic_vector (                              7 downto 0 )                            ;
+            M_AXIS_TDEST                    :   out     std_logic_vector (                              7 downto 0 )                            ;
             M_AXIS_TVALID                   :   out     std_logic                                                                               ;
             M_AXIS_TLAST                    :   out     std_logic                                                                               ;
             M_AXIS_TREADY                   :   in      std_logic                                                                               ;
             
             S_AXIS_TDATA                    :   in      std_logic_vector (                              7 downto 0 )                            ;
             S_AXIS_TKEEP                    :   in      std_logic_vector (                              0 downto 0 )                            ;
-            S_AXIS_TUSER                    :   in      std_logic_vector (                              7 downto 0 )                            ;
+            S_AXIS_TDEST                    :   in      std_logic_vector (                              7 downto 0 )                            ;
             S_AXIS_TVALID                   :   in      std_logic                                                                               ;
             S_AXIS_TLAST                    :   in      std_logic                                                                               ;
             S_AXIS_TREADY                   :   out     std_logic                                                                               ;
@@ -141,14 +141,14 @@ architecture Behavioral of main_testbench is
 
     signal  M_AXIS_TDATA                    :           std_logic_vector (                              7 downto 0 )                            ;
     signal  M_AXIS_TKEEP                    :           std_logic_vector (                              0 downto 0 )                            ;
-    signal  M_AXIS_TUSER                    :           std_logic_vector (                              7 downto 0 )                            ;
+    signal  M_AXIS_TDEST                    :           std_logic_vector (                              7 downto 0 )                            ;
     signal  M_AXIS_TVALID                   :           std_logic                                                                               ;
     signal  M_AXIS_TLAST                    :           std_logic                                                                               ;
     signal  M_AXIS_TREADY                   :           std_logic                                                    := '0'                     ;
 
     signal  S_AXIS_TDATA                    :           std_logic_vector (                              7 downto 0 ) := (others => '0')         ;
     signal  S_AXIS_TKEEP                    :           std_logic_vector (                              0 downto 0 ) := (others => '0')         ;
-    signal  S_AXIS_TUSER                    :           std_logic_vector (                              7 downto 0 ) := (others => '0')         ;
+    signal  S_AXIS_TDEST                    :           std_logic_vector (                              7 downto 0 ) := (others => '0')         ;
     signal  S_AXIS_TVALID                   :           std_logic                                                    := '0'                     ;
     signal  S_AXIS_TLAST                    :           std_logic                                                    := '0'                     ;
     signal  S_AXIS_TREADY                   :           std_logic                                                                               ;
@@ -274,14 +274,14 @@ begin
             
             M_AXIS_TDATA                    =>  M_AXIS_TDATA                        ,
             M_AXIS_TKEEP                    =>  M_AXIS_TKEEP                        ,
-            M_AXIS_TUSER                    =>  M_AXIS_TUSER                        ,
+            M_AXIS_TDEST                    =>  M_AXIS_TDEST                        ,
             M_AXIS_TVALID                   =>  M_AXIS_TVALID                       ,
             M_AXIS_TLAST                    =>  M_AXIS_TLAST                        ,
             M_AXIS_TREADY                   =>  M_AXIS_TREADY                       ,
             
             S_AXIS_TDATA                    =>  S_AXIS_TDATA                        ,
             S_AXIS_TKEEP                    =>  S_AXIS_TKEEP                        ,
-            S_AXIS_TUSER                    =>  S_AXIS_TUSER                        ,
+            S_AXIS_TDEST                    =>  S_AXIS_TDEST                        ,
             S_AXIS_TVALID                   =>  S_AXIS_TVALID                       ,
             S_AXIS_TLAST                    =>  S_AXIS_TLAST                        ,
             S_AXIS_TREADY                   =>  S_AXIS_TREADY                       ,
@@ -301,13 +301,13 @@ begin
             RESET                               =>  RESET                               ,
             -- SLave AXI-Stream 
             S_AXIS_TDATA                        =>  M_AXIS_TDATA                        ,
-            S_AXIS_TDEST                        =>  M_AXIS_TUSER                        ,
+            S_AXIS_TDEST                        =>  M_AXIS_TDEST                        ,
             S_AXIS_TVALID                       =>  M_AXIS_TVALID                       ,
             S_AXIS_TLAST                        =>  M_AXIS_TLAST                        ,
             S_AXIS_TREADY                       =>  M_AXIS_TREADY                       ,
 
             M_AXIS_TDATA                        =>  S_AXIS_TDATA                        ,
-            M_AXIS_TDEST                        =>  S_AXIS_TUSER                        ,
+            M_AXIS_TDEST                        =>  S_AXIS_TDEST                        ,
             M_AXIS_TVALID                       =>  S_AXIS_TVALID                       ,
             M_AXIS_TLAST                        =>  S_AXIS_TLAST                        ,
             M_AXIS_TREADY                       =>  S_AXIS_TREADY                       ,
@@ -359,22 +359,22 @@ begin
         if CLK'event AND CLK = '1' then 
             case i is 
 
-                when  900  => CFG_AWADDR <= x"00000004";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00010000"; CFG_WSTRB <= x"F"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
-                when  901  => CFG_AWADDR <= x"00000004";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00010000"; CFG_WSTRB <= x"F"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
-                when  902  => CFG_AWADDR <= x"00000004";  CFG_AWVALID <= '0'; CFG_WDATA <= x"00010000"; CFG_WSTRB <= x"F"; CFG_WVALID <= '0'; CFG_BREADY <= '1';
+                --when  1900  => CFG_AWADDR <= x"00000030";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00000101"; CFG_WSTRB <= x"F"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
+                --when  1901  => CFG_AWADDR <= x"00000030";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00000101"; CFG_WSTRB <= x"F"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
+                --when  1902  => CFG_AWADDR <= x"00000030";  CFG_AWVALID <= '0'; CFG_WDATA <= x"00000101"; CFG_WSTRB <= x"F"; CFG_WVALID <= '0'; CFG_BREADY <= '1';
 
-                --when 1000  => CFG_AWADDR <= x"00000000";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00000002"; CFG_WSTRB <= x"1"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
-                --when 1001  => CFG_AWADDR <= x"00000000";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00000002"; CFG_WSTRB <= x"1"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
-                --when 1002  => CFG_AWADDR <= x"00000000";  CFG_AWVALID <= '0'; CFG_WDATA <= x"00000002"; CFG_WSTRB <= x"1"; CFG_WVALID <= '0'; CFG_BREADY <= '1';
+                when 1000  => CFG_AWADDR <= x"00000000";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00000004"; CFG_WSTRB <= x"1"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
+                when 1001  => CFG_AWADDR <= x"00000000";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00000004"; CFG_WSTRB <= x"1"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
+                when 1002  => CFG_AWADDR <= x"00000000";  CFG_AWVALID <= '0'; CFG_WDATA <= x"00000004"; CFG_WSTRB <= x"1"; CFG_WVALID <= '0'; CFG_BREADY <= '1';
 
                 --when 1000  => CFG_AWADDR <= x"00000030";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00320601"; CFG_WSTRB <= x"F"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
                 --when 1001  => CFG_AWADDR <= x"00000030";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00320601"; CFG_WSTRB <= x"F"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
                 --when 1002  => CFG_AWADDR <= x"00000030";  CFG_AWVALID <= '0'; CFG_WDATA <= x"00320601"; CFG_WSTRB <= x"F"; CFG_WVALID <= '0'; CFG_BREADY <= '1';
 
 
-                when 1000  => CFG_AWADDR <= x"00000000";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00000004"; CFG_WSTRB <= x"1"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
-                when 1001  => CFG_AWADDR <= x"00000000";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00000004"; CFG_WSTRB <= x"1"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
-                when 1002  => CFG_AWADDR <= x"00000000";  CFG_AWVALID <= '0'; CFG_WDATA <= x"00000004"; CFG_WSTRB <= x"1"; CFG_WVALID <= '0'; CFG_BREADY <= '1';
+                --when 1000  => CFG_AWADDR <= x"00000000";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00000004"; CFG_WSTRB <= x"1"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
+                --when 1001  => CFG_AWADDR <= x"00000000";  CFG_AWVALID <= '1'; CFG_WDATA <= x"00000004"; CFG_WSTRB <= x"1"; CFG_WVALID <= '1'; CFG_BREADY <= '1';
+                --when 1002  => CFG_AWADDR <= x"00000000";  CFG_AWVALID <= '0'; CFG_WDATA <= x"00000004"; CFG_WSTRB <= x"1"; CFG_WVALID <= '0'; CFG_BREADY <= '1';
 
                 when others => CFG_AWADDR <= CFG_AWADDR;  CFG_AWVALID <= '0'; CFG_WDATA <= CFG_WDATA; CFG_WSTRB <= CFG_WSTRB; CFG_WVALID <= '0'; CFG_BREADY <= '0';
 
@@ -383,22 +383,22 @@ begin
     end process;
 
 
-    --cfg_read_processing : process(CLK)
-    --begin 
-    --    if CLK'event AND CLK = '1' then 
-    --        case i is 
+    cfg_read_processing : process(CLK)
+    begin 
+        if CLK'event AND CLK = '1' then 
+            case i is 
 
-    --            when 100000  => CFG_ARADDR <= x"00000000";  CFG_ARVALID <= '1'; CFG_RREADY <= '1';
-    --            when 100001  => CFG_ARADDR <= x"00000000";  CFG_ARVALID <= '1'; CFG_RREADY <= '1';
-    --            when 100002  => CFG_ARADDR <= x"00000000";  CFG_ARVALID <= '0'; CFG_RREADY <= '1';
-    --            when 100003  => CFG_ARADDR <= x"00000000";  CFG_ARVALID <= '0'; CFG_RREADY <= '1';
+                when 500000  => CFG_ARADDR <= x"00000000";  CFG_ARVALID <= '1'; CFG_RREADY <= '1';
+                when 500001  => CFG_ARADDR <= x"00000000";  CFG_ARVALID <= '1'; CFG_RREADY <= '1';
+                when 500002  => CFG_ARADDR <= x"00000000";  CFG_ARVALID <= '0'; CFG_RREADY <= '1';
+                when 500003  => CFG_ARADDR <= x"00000000";  CFG_ARVALID <= '0'; CFG_RREADY <= '1';
 
 
-    --            when others => CFG_ARADDR <= CFG_ARADDR;  CFG_ARVALID <= '0'; CFG_RREADY <= '0';
+                when others => CFG_ARADDR <= CFG_ARADDR;  CFG_ARVALID <= '0'; CFG_RREADY <= '0';
 
-    --        end case;
-    --    end if;
-    --end process;
+            end case;
+        end if;
+    end process;
 
 
 

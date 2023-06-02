@@ -484,7 +484,7 @@ begin
             else
                 -- to do : deassert according fsm
                 case (current_state) is
-                    when IDLE_CHK_UPD_ST => 
+                    when REQ_RX_READ_DATA_ST => 
                         if (need_update_flaq = '1') then 
                             need_update_flaq <= '0';
                         else

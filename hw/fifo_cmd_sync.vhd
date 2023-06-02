@@ -5,9 +5,6 @@ library IEEE;
     use IEEE.math_real."ceil";
     use IEEE.math_real."log2";
 
-library UNISIM;
-    use UNISIM.VComponents.all;
-
 Library xpm;
     use xpm.vcomponents.all;
 
